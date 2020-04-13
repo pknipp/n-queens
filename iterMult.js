@@ -11,6 +11,14 @@ const solveNQueens = n => {
   const boardSolutions = new Set();
   // alternate form: solution = [2,4,6,8,3,1,7,5].map(e => String(e--)).join('')
 
+  const copyBoard = board => {
+    const boardCopy = [];
+    for (const row of board) {
+      boardCopy.push(row.slice());
+    }
+    return boardCopy;
+  }
+
   const placeQueen = (board, row, col) => {
 
     board[row][col] = QUEEN;
@@ -30,23 +38,27 @@ const solveNQueens = n => {
 
     if (row === n) {
       boardSolutions.add(board);
+      return;
     }
+
     let col = 0;
     let nextSpace;
     while ((nextSpace = board[row].indexOf(BLANK, col)) > -1) {
-      const thisBoard = board.slice();
+      const thisBoard = copyBoard(board);
+      // console.log('Before Queen:\n', thisBoard, row, col, nextSpace);
       placeQueen(thisBoard, row, nextSpace);
       processRow(thisBoard, row + 1);
       col = nextSpace + 1;
+      // console.log('After Queen:\n', thisBoard, row, col, nextSpace);
     }
 
   }
 
-  const blankRow = Array(n).fill(BLANK)
-  const blankBoard = Array(n).fill(BLANK).map(row => blankRow.slice())
+  const blankRow = Array(n).fill(BLANK);
+  const blankBoard = [...Array(n)].map(row => blankRow.slice());
   processRow(blankBoard);
-  console.log(boardSolutions);
+  console.log(boardSolutions, boardSolutions.size);
 
 };
 
-solveNQueens(4);
+solveNQueens(8);
