@@ -8,8 +8,7 @@ const solveNQueens = n => {
   const QUEEN = "Q";
   const BLANK = " ";
   const ATTACKED = ".";
-  const boardSolutions = new Set();
-  // alternate form: solution = [2,4,6,8,3,1,7,5].map(e => String(e--)).join('')
+  const boardSolutions = [];
 
   const copyBoard = board => {
     const boardCopy = [];
@@ -37,7 +36,7 @@ const solveNQueens = n => {
   const processRow = (board, row = 0) => {
 
     if (row === n) {
-      boardSolutions.add(board);
+      boardSolutions.push(board.map(row => row.join('')));
       return;
     }
 
@@ -45,11 +44,9 @@ const solveNQueens = n => {
     let nextSpace;
     while ((nextSpace = board[row].indexOf(BLANK, col)) > -1) {
       const thisBoard = copyBoard(board);
-      // console.log('Before Queen:\n', thisBoard, row, col, nextSpace);
       placeQueen(thisBoard, row, nextSpace);
       processRow(thisBoard, row + 1);
       col = nextSpace + 1;
-      // console.log('After Queen:\n', thisBoard, row, col, nextSpace);
     }
 
   }
@@ -57,8 +54,8 @@ const solveNQueens = n => {
   const blankRow = Array(n).fill(BLANK);
   const blankBoard = [...Array(n)].map(row => blankRow.slice());
   processRow(blankBoard);
-  console.log(boardSolutions, boardSolutions.size);
+  return boardSolutions;
 
 };
 
-solveNQueens(8);
+console.log(solveNQueens(8));
